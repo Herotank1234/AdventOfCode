@@ -10,3 +10,7 @@ path = "src/q1.rs"
 [[bin]]
 name = "q2"
 path = "src/q2.rs"
+
+[[bin]]
+name = "q3"
+path = "src/q3.rs"
