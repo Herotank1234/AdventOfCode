@@ -3,4 +3,6 @@ name = "AOC_2015"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
+[[bin]]
+name = "q1"
+path = "src/q1.rs"
