@@ -3,6 +3,9 @@ name = "AOC_2015"
 version = "0.1.0"
 edition = "2021"
 
+[dependencies]
+md5 = "0.7.0"
+
 [[bin]]
 name = "q1"
 path = "src/q1.rs"
@@ -14,3 +17,7 @@ path = "src/q2.rs"
 [[bin]]
 name = "q3"
 path = "src/q3.rs"
+
+[[bin]]
+name = "q4"
+path = "src/q4.rs"
