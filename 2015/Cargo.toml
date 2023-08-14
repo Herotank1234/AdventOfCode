@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 md5 = "0.7.0"
+regex = "1.9.3"
 
 [[bin]]
 name = "q1"
@@ -25,3 +26,7 @@ path = "src/q4.rs"
 [[bin]]
 name = "q5"
 path = "src/q5.rs"
+
+[[bin]]
+name = "q6"
+path = "src/q6.rs"
