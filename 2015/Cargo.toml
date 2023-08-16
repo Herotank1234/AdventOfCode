@@ -55,3 +55,7 @@ path = "src/q11.rs"
 [[bin]]
 name = "q12"
 path = "src/q12.rs"
+
+[[bin]]
+name = "q13"
+path = "src/q13.rs"
