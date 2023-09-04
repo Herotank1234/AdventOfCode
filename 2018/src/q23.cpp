@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <regex>
+#include <cmath>
+#include <queue>
 
 typedef struct Nanobot {
   int x, y, z, r;
@@ -26,6 +28,26 @@ struct NanobotGreater {
   }
 };
 
+typedef struct SearchSpace {
+  SearchSpace(int x, int y, int z, int length) : 
+    x(x), y(y), z(z), length(length)
+  {
+    dist = abs(x) + abs(y) + abs(z);
+  }
+
+  void setInRange(int num) {
+    inRange = num;
+  }
+
+  inline bool operator<(const SearchSpace& other) const {
+    if(inRange != other.inRange) return inRange < other.inRange;
+    if(dist != other.dist) return dist > other.dist;
+    return length > other.length;
+  }
+
+  int x, y, z, dist, length, inRange = 0;
+} SearchSpace;
+
 int getInRadius(std::vector<Nanobot> nanobots) {
   sort(nanobots.begin(), nanobots.end(), NanobotGreater());
   Nanobot largest = nanobots[0];
@@ -34,6 +56,70 @@ int getInRadius(std::vector<Nanobot> nanobots) {
     if(largest.inRange(nanobots[i])) inRange++;
   }
   return inRange;
+}
+
+int distanceFromSpace(int val, int lowerBound, int upperBound) {
+  if(val < lowerBound) return lowerBound - val;
+  if(val > upperBound) return val - upperBound;
+  return 0;
+}
+
+bool isIntersecting(const Nanobot& n, const SearchSpace& space) {
+  int distance = 0;
+  distance += distanceFromSpace(n.x, space.x, space.x + space.length - 1);
+  distance += distanceFromSpace(n.y, space.y, space.y + space.length - 1);
+  distance += distanceFromSpace(n.z, space.z, space.z + space.length - 1);
+  return distance <= n.r;
+}
+
+int countInRange(const std::vector<Nanobot>& nanobots, const SearchSpace& space) {
+  int inRange = 0;
+  for(const Nanobot &n : nanobots) {
+    if(isIntersecting(n, space)) {
+      inRange++;
+      continue;
+    }
+  }
+
+  return inRange;
+}
+
+int getMostInRange(std::vector<Nanobot> nanobots) {
+  int furthestDistance = 0;
+  for(auto nanobot : nanobots) {
+    furthestDistance = std::max(furthestDistance, abs(nanobot.x));
+    furthestDistance = std::max(furthestDistance, abs(nanobot.y));
+    furthestDistance = std::max(furthestDistance, abs(nanobot.z));
+  }
+
+  int startingPoint = std::pow(2, std::ceil(std::log2(furthestDistance)));
+  
+  std::priority_queue<SearchSpace> toVisit;
+  SearchSpace initialSpace = SearchSpace(-startingPoint, -startingPoint, -startingPoint, startingPoint * 2);
+  initialSpace.setInRange(static_cast<int>(nanobots.size()));
+  toVisit.push(initialSpace);
+
+  while(!toVisit.empty()) {
+    auto searchSpace = toVisit.top();
+    toVisit.pop();
+
+    if(searchSpace.length == 1) return searchSpace.dist;
+
+    int next_len = searchSpace.length / 2;
+
+    for(int next_x = searchSpace.x; next_x <= searchSpace.x + next_len; next_x += next_len) {
+      for(int next_y = searchSpace.y; next_y <= searchSpace.y + next_len; next_y += next_len) {
+        for(int next_z = searchSpace.z; next_z <= searchSpace.z + next_len; next_z += next_len) {
+          SearchSpace nextSpace = SearchSpace(next_x, next_y, next_z, next_len);
+          int inRange = countInRange(nanobots, nextSpace);
+          nextSpace.setInRange(inRange);
+          toVisit.push(nextSpace);
+        }
+      }
+    }
+  }
+
+  return 0;
 }
 
 int main() {
@@ -57,6 +143,6 @@ int main() {
   }
 
   std::cout << "Answer to part 1: " << getInRadius(nanobots) << std::endl;
-  std::cout << "Answer to part 2: " << std::endl;
+  std::cout << "Answer to part 2: " << getMostInRange(nanobots) << std::endl;
   return 0;
 }
