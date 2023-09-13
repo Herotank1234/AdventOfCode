@@ -40,9 +40,6 @@ fn get_final_pos_with_aim(instructions: &Vec<(Instruction, u32)>) -> u32 {
   return x * y;
 }
 
-
-
-
 fn main() {
   let contents = fs::read_to_string("./data/q2.txt")
     .expect("Should have been able to read file");
