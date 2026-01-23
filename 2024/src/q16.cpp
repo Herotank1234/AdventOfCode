@@ -145,6 +145,8 @@ int count_unique_tiles_on_best_paths(std::vector<std::vector<char>> &grid,
     int c1 = (curr_state.dir + 1) % dirs.size();
     next_i = curr_state.p.i + dirs[c1].i;
     next_j = curr_state.p.j + dirs[c1].j;
+    min_scores[curr_state.p.i][curr_state.p.j][c1] = 
+      std::min(min_scores[curr_state.p.i][curr_state.p.j][c1], curr_state.score + TURN);
     if(grid[next_i][next_j] == '.') {
       to_visit.push({{next_i, next_j}, c1, curr_state.score + TURN + STEP, curr_state.path});
     }
@@ -152,6 +154,8 @@ int count_unique_tiles_on_best_paths(std::vector<std::vector<char>> &grid,
     int c2 = (curr_state.dir + 2) % dirs.size();
     next_i = curr_state.p.i + dirs[c2].i;
     next_j = curr_state.p.j + dirs[c2].j;
+    min_scores[curr_state.p.i][curr_state.p.j][c2] = 
+      std::min(min_scores[curr_state.p.i][curr_state.p.j][c2], curr_state.score + TURN + TURN);
     if(grid[next_i][next_j] == '.') {
       to_visit.push({{next_i, next_j}, c2, curr_state.score + TURN + TURN + STEP, curr_state.path});
     }
@@ -159,6 +163,8 @@ int count_unique_tiles_on_best_paths(std::vector<std::vector<char>> &grid,
     int ac1 = (curr_state.dir - 1 + dirs.size()) % dirs.size();
     next_i = curr_state.p.i + dirs[ac1].i;
     next_j = curr_state.p.j + dirs[ac1].j;
+    min_scores[curr_state.p.i][curr_state.p.j][ac1] = 
+      std::min(min_scores[curr_state.p.i][curr_state.p.j][ac1], curr_state.score + TURN);
     if(grid[next_i][next_j] == '.') {
       to_visit.push({{next_i, next_j}, ac1, curr_state.score + TURN + STEP, curr_state.path});
     }
