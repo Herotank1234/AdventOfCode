@@ -88,7 +88,6 @@ size_t find_optimal_price(std::vector<Secret_Number> &s_nums) {
   return optimal_price;
 }
 
-
 int main() {
   std::ifstream input("./data/q22.txt");
   std::string line;
