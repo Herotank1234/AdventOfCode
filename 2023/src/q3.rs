@@ -110,20 +110,31 @@ fn in_range(y: isize, x: isize, max_y: isize, max_x: isize) -> bool {
   return y >= 0 && y < max_y && x >= 0 && x < max_x;
 }
 
-fn get_number(grid: &Vec<Vec<char>>, y: usize, x: usize) -> u32 {
-  let num: String = String::new();
-  let mut lower = x;
-  let mut upper = x;
+fn get_number(grid: &Vec<Vec<char>>, y: usize, x: usize) -> (usize, usize, u32) {
+  let mut num: String = String::new();
+  let curr_y: isize = y as isize;
+  let mut curr_x: isize = x as isize;
+  let h: isize = grid.len() as isize;
+  let w: isize = grid[0].len() as isize;
 
-  while lower > 0 {
-    if gri
+  while in_range(curr_y, curr_x - 1, h, w) && grid[y][(curr_x - 1) as usize] >= '0' && 
+    grid[y][(curr_x - 1) as usize] <= '9' 
+  {
+    curr_x -= 1;
   }
 
-  return num.parse::<u32>().unwrap();
+  let start_x = curr_x as usize;
+
+  while curr_x < w && grid[y][curr_x as usize] >= '0' && grid[y][curr_x as usize] <= '9' {
+    num.push(grid[y][curr_x as usize]);
+    curr_x += 1;
+  }
+
+  return (start_x, y, num.parse::<u32>().unwrap());
 }
 
 fn get_adjacent_numbers(grid: &Vec<Vec<char>>, y: usize, x: usize) -> Vec<u32> {
-  let mut adjacent_numbers: HashSet<u32> = HashSet::new();
+  let mut adjacent_numbers: HashSet<(usize, usize, u32)> = HashSet::new();
   let curr_y: isize = y as isize;
   let curr_x: isize = x as isize;
 
@@ -140,7 +151,7 @@ fn get_adjacent_numbers(grid: &Vec<Vec<char>>, y: usize, x: usize) -> Vec<u32> {
     }
   }
 
-  return adjacent_numbers.iter().map(|n| *n).collect::<Vec<u32>>();
+  return adjacent_numbers.iter().map(|(_, _, n)| *n).collect::<Vec<u32>>();
 }
 
 fn sum_gear_ratios(grid: &Vec<Vec<char>>) -> u32 {
@@ -151,8 +162,8 @@ fn sum_gear_ratios(grid: &Vec<Vec<char>>) -> u32 {
       match grid[y][x] {
         '*' => {
           let adjacent_numbers = get_adjacent_numbers(grid, y, x);
-          if adjacent_numbers.len() >= 2 { 
-            gear_ratios += adjacent_numbers.iter().fold(1, |res, num| res * num);
+          if adjacent_numbers.len() == 2 { 
+            gear_ratios += adjacent_numbers[0] * adjacent_numbers[1];
           }
         }
 
