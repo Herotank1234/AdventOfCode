@@ -32,7 +32,7 @@ fn get_ways_to_win_concat(times: &Vec<u32>, best_dists: &Vec<u32>) -> u64 {
       break;
     }
   }
-  return final_time - (2 * ways_to_lose - 1);
+  return final_time - (2 * ways_to_lose - (1 - (final_time & 1)));
 }
 
 fn main() {
